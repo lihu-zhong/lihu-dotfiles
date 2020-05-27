@@ -80,7 +80,7 @@ mpw() {
         if hash pbcopy 2>/dev/null; then
             pbcopy
         elif hash xclip 2>/dev/null; then
-            xclip -selection clip
+            wl-copy
         else
             cat; echo 2>/dev/null
             return
