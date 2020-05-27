@@ -16,7 +16,7 @@
 # a different package manager 🤷
 
 # go hard or go home
-xwayland disable
+#xwayland disable
 
 # Use the super key as mod
 set $mod Mod4
