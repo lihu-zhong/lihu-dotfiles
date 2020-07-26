@@ -188,6 +188,15 @@ bindsym {
     $altmod+Left exec playerctl previous
 }
 
+# Toggle bluetooth
+bindsym {
+    XF86Bluetooth exec \
+        rfkill -o type,soft |
+        grep -qP "bluetooth\s+unblocked" &&
+        rfkill block bluetooth ||
+        rfkill unblock bluetooth
+}
+
 # Lock screen
 bindsym $mod+Shift+BackSpace exec swaylock -lki $bg -s fill
 
