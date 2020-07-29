@@ -2,7 +2,8 @@
 #
 # Dependencies:
 #   * grim
-#   * i3status
+#   * waybar
+#   * fontawesome-fonts
 #   * jq
 #   * kitty
 #   * light
@@ -159,12 +160,8 @@ mode "resize" bindsym {
 
 
 bar {
-    # Cosmetics
-    separator_symbol |
-    font pango 15
-
     # Content
-    status_command i3status
+    swaybar_command waybar
 }
 
 # Audio controls
@@ -190,11 +187,7 @@ bindsym {
 
 # Toggle bluetooth
 bindsym {
-    XF86Bluetooth exec \
-        rfkill -o type,soft |
-        grep -qP "bluetooth\s+unblocked" &&
-        rfkill block bluetooth ||
-        rfkill unblock bluetooth
+    XF86Bluetooth exec rfkill -o type,soft | grep -qP "bluetooth\s+unblocked" && rfkill block bluetooth || rfkill unblock bluetooth
 }
 
 # Lock screen
@@ -210,6 +203,9 @@ bindsym --release Control+Print exec grim -o $(swaymsg -t get_outputs | jq -r '.
 bindsym --release Shift+Print exec grim -g "$(slurp)" - | wl-copy
 # Screenshot selection to file
 bindsym --release Control+Shift+Print exec grim -g "$(slurp)"
+
+# Reload sway
+bindsym $mod+Shift+r reload
 
 # Some colors
 # class                 border  backgr. text    indicator child_border
