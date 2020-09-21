@@ -19,7 +19,7 @@ alias icat='kitty +kitten icat'
 alias kclip='kitty +kitten clipboard'
 alias kdiff='kitty +kitten diff'
 alias kssh='kitty +kitten ssh'
-alias sauce='source ~/.bash_profile'
+alias sauce='source ~/.bashrc'
 alias sl='echo "lol u suck @ tiping"; ls'
 alias vim='vimx'
 
