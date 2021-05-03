@@ -34,8 +34,6 @@ function ls() {
     fi
 }
 
-up() { cd "$(eval printf '../'%.0s {1..$1})"; }
-
 function parse-git-branch() {
     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
@@ -72,6 +70,12 @@ export PATH="$PATH:$HOME/.local/bin:$HOME/bin"
 export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/.poetry/bin:$PATH"
 
+# Properly export gnome-keyring stuff under sway
+if [[ "${DESKTOP_SESSION}" == "sway" ]]; then
+    eval $(gnome-keyring-daemon -s)
+    export SSH_AUTH_SOCK
+fi
+
 ## Added by Master Password
 source bashlib
 mpw() {
@@ -97,3 +101,5 @@ mpw() {
     printf %s "$(MPW_FULLNAME=$MPW_FULLNAME command mpw "$@")" | _copy
 }
 export MPW_FULLNAME=Lihu\ Ben-Ezri-Ravin
+
+up() { cd "$(eval printf '../'%.0s {1..$1})"; }
