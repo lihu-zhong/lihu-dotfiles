@@ -167,8 +167,8 @@ bar {
 # Audio controls
 bindsym {
     XF86AudioMute exec amixer sset 'Master' toggle
-    XF86AudioLowerVolume exec amixer sset 'Master' 5%-
-    XF86AudioRaiseVolume exec amixer sset 'Master' 5%+
+    XF86AudioLowerVolume exec amixer sset 'Master' 1%-
+    XF86AudioRaiseVolume exec amixer sset 'Master' 1%+
 }
 
 # Screen brightness controls
