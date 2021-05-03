@@ -78,7 +78,7 @@ mpw() {
     _copy() {
         if hash pbcopy 2>/dev/null; then
             pbcopy
-        elif hash xclip 2>/dev/null; then
+        elif hash wl-copy 2>/dev/null; then
             wl-copy
         else
             cat; echo 2>/dev/null
