@@ -21,6 +21,7 @@ alias kdiff='kitty +kitten diff'
 alias kssh='kitty +kitten ssh'
 alias sauce='source ~/.bashrc'
 alias sl='echo "lol u suck @ tiping"; ls'
+alias pv='poetry run vim'
 
 function dg() {
     grep "$@" /usr/share/dict/words
