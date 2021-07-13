@@ -64,6 +64,7 @@ __prompt_command() {
 
 }
 
+export HISTSIZE=100000
 export CLICOLOR=1
 export LSCOLORS=ExFxBxDxCxegedabagacad
 
