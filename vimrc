@@ -35,7 +35,7 @@ Plugin 'Glench/Vim-Jinja2-Syntax'
 " git wrapper for vim
 Plugin 'tpope/vim-fugitive'
 " Python formatter
-Plugin 'ambv/black'
+Plugin 'psf/black'
 " Python documetation
 Plugin 'davidhalter/jedi-vim'
 " TOML syntax highlighting
