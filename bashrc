@@ -12,16 +12,19 @@ fi
 
 # User specific environment and startup programs
 
-alias cat='bat'
+alias cat='batcat'
 alias cdl='cd "$(ls -d ./* | tail -1)"'
+alias fd='fdfind'
 alias fuck='sudo $(history -p \!\!)'
 alias icat='kitty +kitten icat'
 alias kclip='kitty +kitten clipboard'
 alias kdiff='kitty +kitten diff'
 alias kssh='kitty +kitten ssh'
+alias nv='nvim'
+alias pv='poetry run vim'
+alias rg='rgrep'
 alias sauce='source ~/.bashrc'
 alias sl='echo "lol u suck @ tiping"; ls'
-alias pv='poetry run vim'
 
 function dg() {
     grep "$@" /usr/share/dict/words

@@ -4,7 +4,7 @@
     gud = "!f() { local fixee=\"${1:-0}\"; git add -A; git commit --fixup HEAD~${fixee}; git rebase -i HEAD~$(( fixee + 2 )); }; f"
     go = "!f() { git add -A; git commit; }; f"
 [gpg]
-    program = gpg2
+    program = gpg
 [commit]
     gpgsign = true
 [core]
@@ -16,4 +16,4 @@
 [include]
     path = ~/.local_gitconfig
 [init]
-	defaultBranch = main
+    defaultBranch = main
