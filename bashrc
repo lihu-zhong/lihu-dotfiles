@@ -112,3 +112,27 @@ mpw() {
 export MPW_FULLNAME=Lihu\ Ben-Ezri-Ravin
 
 up() { cd "$(eval printf '../'%.0s {1..$1})"; }
+
+read -ra AWS_VARS <<< "$(python3 << __EOF__
+import configparser
+from pathlib import Path
+
+parser = configparser.ConfigParser()
+parser.read(Path.home() / ".aws" / "credentials")
+
+print(
+    " ".join(
+        f"{cred.upper()},{value}"
+        for name, section in parser.items()
+        if name == "default"
+        for cred, value in section.items()
+    ),
+    end="",
+)
+__EOF__
+)"
+
+for secret in "${AWS_VARS[@]}"; do
+    IFS="," read -ra aws_var <<< "${secret}"
+    export "${aws_var[0]}"="${aws_var[1]}"
+done
