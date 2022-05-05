@@ -74,6 +74,10 @@ export LSCOLORS=ExFxBxDxCxegedabagacad
 export PATH="$PATH:$HOME/.local/bin:$HOME/bin"
 export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/.poetry/bin:$PATH"
+export PATH="$HOME/.gem/ruby/3.0.0/bin:$PATH"
+export PATH="/usr/local/texlive/2022/bin/x86_64-linux:$PATH"
+export MANPATH="/usr/local/texlive/2022/texmf-dist/doc/man:$MANPATH"
+export INFOPATH="/usr/local/texlive/2022/texmf-dist/doc/info:$INFOPATH"
 
 # Properly export gnome-keyring stuff under sway
 if [[ "${DESKTOP_SESSION}" == "sway" ]]; then
