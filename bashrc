@@ -12,9 +12,8 @@ fi
 
 # User specific environment and startup programs
 
-alias cat='batcat'
+alias cat='bat'
 alias cdl='cd "$(ls -d ./* | tail -1)"'
-alias fd='fdfind'
 alias fuck='sudo $(history -p \!\!)'
 alias icat='kitty +kitten icat'
 alias kclip='kitty +kitten clipboard'
@@ -22,7 +21,6 @@ alias kdiff='kitty +kitten diff'
 alias kssh='kitty +kitten ssh'
 alias nv='nvim'
 alias pv='poetry run vim'
-alias rg='rgrep'
 alias sauce='source ~/.bashrc'
 alias sl='echo "lol u suck @ tiping"; ls'
 
@@ -76,46 +74,16 @@ export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/.poetry/bin:$PATH"
 export PATH="$HOME/.gem/ruby/3.0.0/bin:$PATH"
 export PATH="/usr/local/texlive/2022/bin/x86_64-linux:$PATH"
+export PATH="$PATH:$HOME/Documents/spack/bin"
 export MANPATH="/usr/local/texlive/2022/texmf-dist/doc/man:$MANPATH"
 export INFOPATH="/usr/local/texlive/2022/texmf-dist/doc/info:$INFOPATH"
+export EDITOR=nvim
 
 # Properly export gnome-keyring stuff under sway
 if [[ "${DESKTOP_SESSION}" == "sway" ]]; then
     eval $(gnome-keyring-daemon -s)
     export SSH_AUTH_SOCK
 fi
-
-## Added by Master Password
-source bashlib
-mpw() {
-    _copy() {
-        if hash pbcopy 2>/dev/null; then
-            pbcopy
-        elif hash wl-copy 2>/dev/null; then
-            wl-copy
-        else
-            cat; echo 2>/dev/null
-            return
-        fi
-        echo >&2 "Copied!"
-    }
-
-    # Empty the clipboard
-    :| _copy 2>/dev/null
-
-    # Ask for the user's name and password if not yet known.
-    MPW_FULLNAME=${MPW_FULLNAME:-$(ask 'Your Full Name:')}
-
-    # Start Master Password and copy the output.
-    printf %s "$(MPW_FULLNAME=$MPW_FULLNAME command mpw "$@")" | _copy
-}
-export MPW_FULLNAME=Lihu\ Ben-Ezri-Ravin
-
-up() { cd "$(eval printf '../'%.0s {1..$1})"; }
-
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 read -ra AWS_VARS <<< "$(python3 << __EOF__
 import configparser
@@ -140,3 +108,5 @@ for secret in "${AWS_VARS[@]}"; do
     IFS="," read -ra aws_var <<< "${secret}"
     export "${aws_var[0]}"="${aws_var[1]}"
 done
+
+up() { cd "$(eval printf '../'%.0s {1..$1})"; }
