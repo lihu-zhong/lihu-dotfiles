@@ -22,18 +22,11 @@ alias kssh='kitty +kitten ssh'
 alias nv='nvim'
 alias pv='poetry run vim'
 alias sauce='source ~/.bashrc'
+alias ls='eza'
 alias sl='echo "lol u suck @ tiping"; ls'
 
 function dg() {
     grep "$@" /usr/share/dict/words
-}
-
-function ls() {
-    if [[ "${@: -1}" == "-t" ]]; then
-        exa -lhbT --git
-    else
-        exa -lhbG "$@" --git
-    fi
 }
 
 function parse-git-branch() {
