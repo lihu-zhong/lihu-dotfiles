@@ -1,6 +1,7 @@
 [alias]
-    hist = log --pretty=format:'%C(yellow)%h%Creset %ad %C(yellow)|%Creset %s%C(bold blue)%d%Creset %C(red)[%an]%Creset' --graph --date=short
+    hist = log --pretty=format:'%C(yellow)%h%Creset %ad %C(yellow)|%Creset %s%C(bold blue)%d%Creset %C(red)[%aN]%Creset' --graph --date=short
     yclone = "!f() { git clone git@scm.yoloswag.lol:lihu/${1}.git; }; f"
+    bclone = "!f() { git clone git@github.com:broadinstitute/${1}.git; }; f"
     gud = "!f() { local fixee=\"${1:-0}\"; git add -A; git commit --fixup HEAD~${fixee}; git rebase -i HEAD~$(( fixee + 2 )); }; f"
     go = "!f() { git add -A; git commit; }; f"
 [gpg]
@@ -8,7 +9,7 @@
 [commit]
     gpgsign = true
 [core]
-    editor = vim
+    editor = nvim
 [rebase]
     autosquash = true
 [branch]
