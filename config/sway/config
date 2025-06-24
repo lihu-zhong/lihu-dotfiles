@@ -1,4 +1,5 @@
-# Sway config file. Read the man pages -- there's no real online docs.
+# Sway config file. Read the man pages. Updated with copypasta from the default
+# config in Fedora Sericea 42
 #
 # Dependencies:
 #   * grim
@@ -16,18 +17,26 @@
 # of them might require non-default repos. You're on your own if you use
 # a different package manager 🤷
 
-# go hard or go home
-#xwayland disable
-
 # Use the super key as mod
 set $mod Mod4
 # Use alt as the alternate modifier
 set $altmod Mod1
 
-# Set a single background image source
-set $bg ~/.bg
+# Your preferred application launcher
+# Note: pass the final command to swaymsg so that the resulting window can be opened
+# on the original workspace that the command was run on.
+# Recommends: rofi-wayland
+set $rofi_cmd rofi \
+        -terminal '$term'
 
-# Set a background image
+# Shows a combined list of the applications with desktop files and
+# executables from PATH.
+# TODO: add window with the next release of rofi-wayland
+set $menu $rofi_cmd -show combi -combi-modes drun#run -modes combi
+
+# Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
+# Requires: desktop-backgrounds-compat, swaybg, jxl-pixbuf-loader
+set $bg /usr/share/backgrounds/default.jxl
 output * bg $bg fill
 
 # This font is widely installed, provides lots of unicode glyphs, right-to-left
@@ -35,7 +44,7 @@ output * bg $bg fill
 font pango:DejaVu Sans Mono 12
 
 # Use Mouse+$mod to drag floating windows to their wanted position
-floating_modifier $mod
+floating_modifier $mod normal
 
 # start a terminal
 bindsym $mod+Return exec kitty
@@ -43,8 +52,8 @@ bindsym $mod+Return exec kitty
 # kill focused window
 bindsym $mod+Shift+q kill
 
-# start dmenu (a program launcher)
-bindsym $mod+d exec dmenu_run
+# start launcher
+bindsym $mod+d exec $menu
 
 bindsym {
     # Change focus by direction
@@ -56,9 +65,6 @@ bindsym {
     $mod+Up focus up
     $mod+l focus right
     $mod+Right focus right
-
-    # Toggle focus between tiling / floating windows
-    $mod+space focus mode_toggle
 
     # Focus on parent/child container
     $mod+a focus parent
@@ -94,7 +100,7 @@ bindsym {
 }
 
 # Toggle tiling / floating
-bindsym $mod+Shift+space floating toggle
+bindsym $mod+Shift+t floating toggle
 
 # Define names for default workspaces for which we configure key bindings later on.
 set {
@@ -158,24 +164,15 @@ mode "resize" bindsym {
     $mod+r mode "default"
 }
 
+# Sway has a "scratchpad", which is a bag of holding for windows.
+# You can send windows there and get them back later.
 
-bar {
-    # Content
-    swaybar_command waybar
-}
+# Move the currently focused window to the scratchpad
+bindsym $mod+Shift+minus move scratchpad
 
-# Audio controls
-bindsym {
-    XF86AudioMute exec amixer sset 'Master' toggle
-    XF86AudioLowerVolume exec amixer sset 'Master' 1%-
-    XF86AudioRaiseVolume exec amixer sset 'Master' 1%+
-}
-
-# Screen brightness controls
-bindsym {
-    XF86MonBrightnessUp exec light -A 5
-    XF86MonBrightnessDown exec light -U 5
-}
+# Show the next scratchpad window or hide the focused scratchpad window.
+# If there are multiple scratchpad windows, this command cycles through them.
+bindsym $mod+minus scratchpad show
 
 # Media player controls
 bindsym {
@@ -185,24 +182,20 @@ bindsym {
     $altmod+Left exec playerctl previous
 }
 
-# Toggle bluetooth
-bindsym {
-    XF86Bluetooth exec rfkill -o type,soft | grep -qP "bluetooth\s+unblocked" && rfkill block bluetooth || rfkill unblock bluetooth
+# A special mode for passing any keybindings to the focused application
+# The default uses the "Pause" button which I don't have on my laptop.
+mode "passthrough" {
+    bindsym $mod+$altmod+Down mode default
+}
+bindsym $mod+$altmod+Down mode "passthrough"
+
+bar {
+    # Content
+    swaybar_command waybar
 }
 
 # Lock screen
 bindsym $mod+Shift+BackSpace exec swaylock -lki $bg -s fill
-
-# Cribbed from the grim README
-# Screenshot the focused monitor to clipboard
-bindsym --release Print exec grim -o $(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name') - | wl-copy
-# Screenshot the focused monitor to file
-bindsym --release Control+Print exec grim -o $(swaymsg -t get_outputs | jq -r '.[] | select(.focused) | .name')
-
-# Screenshot selection to clipboard
-bindsym --release Shift+Print exec grim -g "$(slurp)" - | wl-copy
-# Screenshot selection to file
-bindsym --release Control+Shift+Print exec grim -g "$(slurp)"
 
 # Reload sway
 bindsym $mod+Shift+r reload
@@ -217,15 +210,36 @@ client.placeholder      #000000 #0c0c0c #eeeeee #000000   #0c0c0c
 
 client.background       #eeeeee
 
-# Remap focus mode_toggle to not conflict with my prefered language swap
-# binding
-bindsym $mod+o focus mode_toggle
-
 # Keyboard layout
 input type:keyboard {
     xkb_layout us,il
     xkb_options grp:win_space_toggle
 }
 
-exec --no-startup-id /usr/libexec/polkit-gnome-authentication-agent-1
-exec gnome-keyring-daemon --start --components='ssh,gpg'
+## Audio controls
+set $volume_helper_cmd /usr/libexec/sway/volume-helper
+set $volume_limit 100
+set $volume_step 5
+
+# Allow volume controls even if the screen is locked
+bindsym --locked {
+    XF86AudioRaiseVolume exec \
+        $volume_helper_cmd --limit "$volume_limit" --increase "$volume_step"
+    XF86AudioLowerVolume exec \
+        $volume_helper_cmd --limit "$volume_limit" --decrease "$volume_step"
+    XF86AudioMute    exec pactl set-sink-mute @DEFAULT_SINK@ toggle && $volume_helper_cmd
+    XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+}
+
+# Screen brightness controls
+set $brightness_notification_cmd  command -v notify-send >/dev/null && \
+        VALUE=$(brightnessctl --percentage get) && \
+        notify-send -e -h string:x-canonical-private-synchronous:brightness \
+            -h "int:value:$VALUE" -t 800 "Brightness: ${VALUE}%"
+
+set $brightness_step 5
+
+bindsym XF86MonBrightnessDown exec \
+        'STEP="$brightness_step" && brightnessctl -q set ${STEP:-5}%- && $brightness_notification_cmd'
+bindsym XF86MonBrightnessUp exec \
+        'STEP="$brightness_step" && brightnessctl -q set +${STEP:-5}% && $brightness_notification_cmd'
