@@ -73,8 +73,8 @@ export INFOPATH="/usr/local/texlive/2022/texmf-dist/doc/info:$INFOPATH"
 export EDITOR=nvim
 
 # Properly export gnome-keyring stuff under sway
-if [[ "${DESKTOP_SESSION}" == "sway" ]]; then
-    eval $(gnome-keyring-daemon -s)
+if [[ -n "${DESKTOP_SESSION}" ]]; then
+    eval $(gnome-keyring-daemon --start 2>/dev/null)
     export SSH_AUTH_SOCK
 fi
 
