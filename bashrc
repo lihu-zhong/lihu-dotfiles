@@ -5,11 +5,6 @@ if [ -f /etc/bashrc ]; then
     . /etc/bashrc
 fi
 
-# local-specific stuff
-if [ -f ~/.local_bashrc ]; then
-    . ~/.local_bashrc
-fi
-
 # User specific environment and startup programs
 
 alias cat='bat'
@@ -64,18 +59,17 @@ export LSCOLORS=ExFxBxDxCxegedabagacad
 
 export PATH="$PATH:$HOME/.local/bin:$HOME/bin"
 export PATH="$HOME/.cargo/bin:$PATH"
-export PATH="$HOME/.poetry/bin:$PATH"
-export PATH="$HOME/.gem/ruby/3.0.0/bin:$PATH"
-export PATH="/usr/local/texlive/2022/bin/x86_64-linux:$PATH"
-export PATH="$PATH:$HOME/Documents/spack/bin"
-export MANPATH="/usr/local/texlive/2022/texmf-dist/doc/man:$MANPATH"
-export INFOPATH="/usr/local/texlive/2022/texmf-dist/doc/info:$INFOPATH"
 export EDITOR=nvim
 
 # Properly export gnome-keyring stuff under sway
 if [[ -n "${DESKTOP_SESSION}" ]]; then
     eval $(gnome-keyring-daemon --start 2>/dev/null)
     export SSH_AUTH_SOCK
+fi
+
+# local-specific stuff
+if [ -f ~/.local_bashrc ]; then
+    . ~/.local_bashrc
 fi
 
 up() { cd "$(eval printf '../'%.0s {1..$1})"; }
