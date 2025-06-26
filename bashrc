@@ -7,7 +7,7 @@ fi
 
 # local-specific stuff
 if [ -f ~/.local_bashrc ]; then
-	. ~/.local_bashrc
+    . ~/.local_bashrc
 fi
 
 # User specific environment and startup programs
@@ -77,29 +77,5 @@ if [[ -n "${DESKTOP_SESSION}" ]]; then
     eval $(gnome-keyring-daemon --start 2>/dev/null)
     export SSH_AUTH_SOCK
 fi
-
-read -ra AWS_VARS <<< "$(python3 << __EOF__
-import configparser
-from pathlib import Path
-
-parser = configparser.ConfigParser()
-parser.read(Path.home() / ".aws" / "credentials")
-
-print(
-    " ".join(
-        f"{cred.upper()},{value}"
-        for name, section in parser.items()
-        if name == "default"
-        for cred, value in section.items()
-    ),
-    end="",
-)
-__EOF__
-)"
-
-for secret in "${AWS_VARS[@]}"; do
-    IFS="," read -ra aws_var <<< "${secret}"
-    export "${aws_var[0]}"="${aws_var[1]}"
-done
 
 up() { cd "$(eval printf '../'%.0s {1..$1})"; }
